@@ -22,7 +22,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		ScreenUtils.clear(Color.FOREST);
 		batch.begin();
-		batch.draw(img, getPosition().x, getPosition().y);
+		batch.draw(img, getPosition().x - (img.getHeight() >> 1), getPosition().y - (img.getWidth() >> 1));
 		batch.end();
 	}
 
