@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import static com.androidtest.project1.GfxUtils.getPosition;
+import static ru.lazarev.game.utils.GfxUtils.getPosition;
+
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
