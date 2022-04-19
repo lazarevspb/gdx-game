@@ -14,8 +14,9 @@ public class Explosion {
     private final Vector2 position;
     private final Music music;
 
-    public Explosion(String texture, Animation.PlayMode mode, int columns, int lines, int fps, String mName) {
-        animation = new MyAnimation(texture, mode, columns, lines, fps);
+    public Explosion(TextureRegion textureRegion, Animation.PlayMode mode, int columns, int lines, int fps, String mName) {
+
+        animation = new MyAnimation(textureRegion, mode, columns, lines, fps);
         music = Gdx.audio.newMusic(Gdx.files.internal(mName));
         music.play();
         position = getPosition(animation.getRegion().getRegionWidth(), animation.getRegion().getRegionHeight());
@@ -38,7 +39,6 @@ public class Explosion {
     }
 
     public void dispose() {
-        animation.dispose();
         music.dispose();
     }
 }

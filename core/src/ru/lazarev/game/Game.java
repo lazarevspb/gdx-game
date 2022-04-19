@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -25,15 +26,17 @@ public class Game extends ApplicationAdapter {
     private MyAnimation bodyAnimation;
     private MyAnimation headAnimation;
     private List<Explosion> explosions;
+    private TextureAtlas textureAtlas;
 
     @Override
     public void create() {
+        textureAtlas = new TextureAtlas("img/atlas/main.atlas");
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         explosions = new ArrayList<>();
-        turretAnimation = new MyAnimation("img/turret-sprites-deployment.png", Animation.PlayMode.NORMAL, 8, 1, 8);
-        bodyAnimation = new MyAnimation("img/turret-sprites-body.png", Animation.PlayMode.LOOP, 2, 1, 16);
-        headAnimation = new MyAnimation("img/turret-sprites-head-shot-idle.png", Animation.PlayMode.NORMAL, 5, 1, 60);
+        turretAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-deployment"), Animation.PlayMode.NORMAL, 8, 1, 8);
+        bodyAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-body"), Animation.PlayMode.LOOP, 2, 1, 16);
+        headAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-head-shot-idle"), Animation.PlayMode.NORMAL, 5, 1, 60);
     }
 
     @Override
@@ -76,7 +79,7 @@ public class Game extends ApplicationAdapter {
             headAnimation.resetTime();
             explosions.add(
                     new Explosion(
-                            "img/explosion-sprite.png", Animation.PlayMode.NORMAL, 4, 4, 16, "audio/explosion.mp3"));
+                            textureAtlas.findRegion("explosion-sprite"), Animation.PlayMode.NORMAL, 4, 4, 16, "audio/explosion.mp3"));
         }
         Gdx.graphics.setTitle(String.valueOf(explosions.size()));
     }
@@ -84,9 +87,6 @@ public class Game extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        bodyAnimation.dispose();
-        headAnimation.dispose();
-        turretAnimation.dispose();
         shapeRenderer.dispose();
     }
 }
