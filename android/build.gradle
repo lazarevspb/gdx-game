@@ -1,4 +1,11 @@
 android {
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+
     buildToolsVersion "29.0.3"
     compileSdkVersion 30
     sourceSets {
@@ -88,5 +95,6 @@ task run(type: Exec) {
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'ru.lazarev.game/ru.lazarev.game.AndroidLauncher'
 }
+
 
 eclipse.project.name = appName + "-android"

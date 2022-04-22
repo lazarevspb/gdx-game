@@ -1,28 +1,29 @@
 package ru.lazarev.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import static ru.lazarev.game.utils.GfxUtils.getPosition;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.ScreenUtils;
-import ru.lazarev.game.animation.Explosion;
-import ru.lazarev.game.animation.MyAnimation;
-import ru.lazarev.game.sprites.SpaceShip;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import ru.lazarev.game.animation.Explosion;
+import ru.lazarev.game.animation.MyAnimation;
+import ru.lazarev.game.screens.MainScreen;
+import ru.lazarev.game.sprites.SpaceShip;
 
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
-
-public class Game extends ApplicationAdapter {
+public class myGame extends Game {
     private static final int COUNT_SPACE_SHIPS = 2;
+    private static final String PATCH_ATLAS = "img/atlas/main.atlas";
+    private static final String TURRET_DEPLOYMENT = "turret-sprites-deployment";
+    private static final String TURRET_BODY = "turret-sprites-body";
+    private static final String TURRET_IDLE = "turret-sprites-head-shot-idle";
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private MyAnimation turretAnimation;
@@ -37,21 +38,23 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
-        textureAtlas = new TextureAtlas("img/atlas/main.atlas");
+        textureAtlas = new TextureAtlas(PATCH_ATLAS);
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         mouseRectangle = new Rectangle();
         explosions = new ArrayList<>();
         spaceShips = new ArrayList<>();
         fillSpaceShips();
-        turretAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-deployment"), Animation.PlayMode.NORMAL, 8, 1, 8);
-        bodyAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-body"), Animation.PlayMode.LOOP, 2, 1, 16);
-        headAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-head-shot-idle"), Animation.PlayMode.NORMAL, 5, 1, 60);
+        turretAnimation = new MyAnimation(textureAtlas.findRegion(TURRET_DEPLOYMENT), Animation.PlayMode.NORMAL, 8, 1, 8);
+        bodyAnimation = new MyAnimation(textureAtlas.findRegion(TURRET_BODY), Animation.PlayMode.LOOP, 2, 1, 16);
+        headAnimation = new MyAnimation(textureAtlas.findRegion(TURRET_IDLE), Animation.PlayMode.NORMAL, 5, 1, 60);
+        this.setScreen(new MainScreen(this));
     }
 
     @Override
     public void render() {
-        ScreenUtils.clear(Color.FOREST);
+        super.render();
+/*        ScreenUtils.clear(Color.FOREST);
         boolean fire = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
         getTurretAttackHandling();
@@ -63,7 +66,7 @@ public class Game extends ApplicationAdapter {
             if (spaceShip.isGoingOffScreen()) {
                 Gdx.app.exit();
             }
-        }
+        }*/
     }
 
     private void getSpaceShip() {
