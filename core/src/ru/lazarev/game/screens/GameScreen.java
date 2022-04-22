@@ -4,14 +4,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen, InputProcessor {
-
+  private final SpriteBatch batch;
   private final Game game;
 
   public GameScreen(Game game) {
     this.game = game;
     Gdx.input.setInputProcessor(this);
+    batch = new SpriteBatch();
   }
 
   @Override
@@ -21,7 +25,7 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public void render(float delta) {
-    System.out.println("\"GameScreen\" = " + "GameScreen");
+    ScreenUtils.clear(Color.BLACK);
   }
 
   @Override
@@ -46,7 +50,7 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public void dispose() {
-
+    batch.dispose();
   }
 
   @Override
