@@ -45,14 +45,6 @@ public class MainScreen implements Screen, InputProcessor {
     bitmapFont.draw(batch, "Start Game", 58, 100);
     spaceFont.draw(batch, "STAR WARS", 58, 250);
     batch.end();
-
-//    Rectangle rectangle = getStartGameRectangle();
-//    ShapeRenderer shapeRenderer = new ShapeRenderer();
-//    shapeRenderer.begin(ShapeType.Line);
-//    shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-//    shapeRenderer.end();
-//    shapeRenderer.dispose();
-//    System.out.println("\"MainScreen\" = " + "MainScreen");
   }
 
   @Override
@@ -131,8 +123,6 @@ public class MainScreen implements Screen, InputProcessor {
       bitmapFont.setColor(Color.YELLOW);
     }
     return false;
-
-
   }
 
   private Rectangle getStartGameRectangle() {

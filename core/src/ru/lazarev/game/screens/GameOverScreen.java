@@ -18,20 +18,22 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   private final SpriteBatch batch;
   private final Game game;
-  private final BitmapFont gameOver;
   private final BitmapFont newGame;
-  private final SpaceFont spaceFont;
+  private final BitmapFont exit;
+  private final SpaceFont gameOver;
 
   public GameOverScreen(Game game) {
     this.game = game;
     Gdx.input.setInputProcessor(this);
     batch = new SpriteBatch();
-    gameOver = new BitmapFont();
-    spaceFont = new SpaceFont(70);
-    spaceFont.setColor(Color.YELLOW);
+    gameOver = new SpaceFont(70);
+    gameOver.setColor(Color.YELLOW);
     newGame = new BitmapFont();
     newGame.setColor(Color.YELLOW);
     newGame.getData().setScale(2, 1);
+    exit = new BitmapFont();
+    exit.setColor(Color.YELLOW);
+    exit.getData().setScale(2, 1);
   }
 
   @Override
@@ -43,21 +45,12 @@ public class GameOverScreen implements Screen, InputProcessor {
   public void render(float delta) {
     final int centerX = Gdx.graphics.getHeight() >> 1;
     final int centerY = Gdx.graphics.getWidth() >> 1;
-
     ScreenUtils.clear(Color.FIREBRICK);
     batch.begin();
-    spaceFont.draw(batch, "GAME OVER", centerX - 180, centerY);
+    gameOver.draw(batch, "GAME OVER", centerX - 180, centerY);
     newGame.draw(batch, "new game?", centerX + 20, centerY - 156);
+    exit.draw(batch, "exit", centerX + 20, centerY - 186);
     batch.end();
-
-//    Rectangle rectangle = new Rectangle(centerX + 18, centerY-58, 150, 20);;
-//    ShapeRenderer shapeRenderer = new ShapeRenderer();
-//    shapeRenderer.begin(ShapeType.Line);
-//    shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-//    shapeRenderer.end();
-//    shapeRenderer.dispose();
-//    System.out.println("\"MainScreen\" = " + "MainScreen");
-
   }
 
   @Override
@@ -83,7 +76,7 @@ public class GameOverScreen implements Screen, InputProcessor {
   @Override
   public void dispose() {
     newGame.dispose();
-    gameOver.dispose();
+    exit.dispose();
     batch.dispose();
   }
 
@@ -110,10 +103,15 @@ public class GameOverScreen implements Screen, InputProcessor {
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
     Rectangle rectangle = getNewGameRectangle();
-    Vector2 vector = getPosition();
-    if (rectangle.contains(vector)) {
+    Rectangle exit = getExitRectangle();
+    Vector2 cursor = getPosition();
+    if (rectangle.contains(cursor)) {
       dispose();
       game.setScreen(new MainScreen(game));
+      return true;
+    } else if (exit.contains(cursor)) {
+      dispose();
+      Gdx.app.exit();
       return true;
     }
     return false;
@@ -126,13 +124,18 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   @Override
   public boolean mouseMoved(int screenX, int screenY) {
-    Rectangle rectangle = getNewGameRectangle();
-    Vector2 vector = getPosition();
-    if (rectangle.contains(vector)) {
-      newGame.setColor(Color.BLUE);
+    Rectangle newGame = getNewGameRectangle();
+    Rectangle exit = getExitRectangle();
+    Vector2 cursor = getPosition();
+    if (newGame.contains(cursor)) {
+      this.newGame.setColor(Color.BLUE);
+      return true;
+    } else if (exit.contains(cursor)) {
+      this.exit.setColor(Color.BLUE);
       return true;
     } else {
-      newGame.setColor(Color.YELLOW);
+      this.newGame.setColor(Color.YELLOW);
+      this.exit.setColor(Color.YELLOW);
     }
     return false;
   }
@@ -143,9 +146,15 @@ public class GameOverScreen implements Screen, InputProcessor {
   }
 
   private Rectangle getNewGameRectangle() {
-    final int centerX = Gdx.graphics.getHeight() >> 1;
-    final int centerY = Gdx.graphics.getWidth() >> 1;
-    return new Rectangle(centerX + 18, centerY - 174, 150, 20);
+
+    return new Rectangle(getCenterScreen().x + 18, getCenterScreen().y - 174, 150, 20);
   }
 
+  private Rectangle getExitRectangle() {
+    return new Rectangle(getCenterScreen().x + 18, getCenterScreen().y - 204, 150, 20);
+  }
+
+  private Vector2 getCenterScreen() {
+    return new Vector2(Gdx.graphics.getHeight() >> 1, Gdx.graphics.getWidth() >> 1);
+  }
 }
