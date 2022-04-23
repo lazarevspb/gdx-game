@@ -34,4 +34,8 @@ public class SpaceFont {
   public int getHeight() {
     return (int) spaceFont.getCapHeight();
   }
+
+  public int getWidth() {
+    return spaceFont.getRegion().getRegionWidth();
+  }
 }

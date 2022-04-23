@@ -26,7 +26,13 @@ public class GameOverScreen implements Screen, InputProcessor {
     this.game = game;
     Gdx.input.setInputProcessor(this);
     batch = new SpriteBatch();
+    if (Gdx.graphics.getHeight() > 800) {
+    gameOver = new SpaceFont(200);
+
+    } else {
     gameOver = new SpaceFont(70);
+
+    }
     gameOver.setColor(Color.YELLOW);
     newGame = new BitmapFont();
     newGame.setColor(Color.YELLOW);
@@ -43,11 +49,16 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   @Override
   public void render(float delta) {
-    final int centerX = Gdx.graphics.getHeight() >> 1;
-    final int centerY = Gdx.graphics.getWidth() >> 1;
+    final int centerX = Gdx.graphics.getWidth() >> 1;
+    final int centerY = Gdx.graphics.getHeight() >> 1;
     ScreenUtils.clear(Color.FIREBRICK);
     batch.begin();
+
+    if (Gdx.graphics.getHeight() > 800) {
+      gameOver.draw(batch, "GAME OVER", (Gdx.graphics.getWidth() - gameOver.getWidth())/3, centerY + centerY/2);
+    } else {
     gameOver.draw(batch, "GAME OVER", centerX - 180, centerY);
+    }
     newGame.draw(batch, "new game?", centerX + 20, centerY - 156);
     exit.draw(batch, "exit", centerX + 20, centerY - 186);
     batch.end();
@@ -102,7 +113,9 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    return false;
+    Gdx.app.log("App:", "x: " + screenX + ", y: " + screenY);
+    Gdx.app.log("App:", "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
+    return true;
   }
 
   @Override

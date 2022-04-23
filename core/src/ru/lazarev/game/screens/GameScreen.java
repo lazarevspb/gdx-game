@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
-import ru.lazarev.game.sprites.SpaceShip;
+import ru.lazarev.game.sprites.EnemyShip;
 import ru.lazarev.game.sprites.Turret;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class GameScreen implements Screen, InputProcessor {
   private final SpriteBatch batch;
   private final Game game;
   private static final int COUNT_SPACE_SHIPS = 2;
-  private final List<SpaceShip> spaceShips;
+  private final List<EnemyShip> enemyShips;
   private final ShapeRenderer shapeRenderer;
   private final Rectangle mouseRectangle;
 
@@ -30,7 +30,7 @@ public class GameScreen implements Screen, InputProcessor {
     batch = new SpriteBatch();
     shapeRenderer = new ShapeRenderer();
     mouseRectangle = new Rectangle();
-    spaceShips = new ArrayList<>();
+    enemyShips = new ArrayList<>();
     turret = new Turret();
     fillSpaceShips();
   }
@@ -47,9 +47,9 @@ public class GameScreen implements Screen, InputProcessor {
     getTargetMouse();
     getSpaceShip();
 
-    for (SpaceShip spaceShip : spaceShips) {
-     turret.hitHandling(fire, spaceShip);
-      if (spaceShip.isGoingOffScreen()) {
+    for (EnemyShip enemyShip : enemyShips) {
+     turret.hitHandling(fire, enemyShip);
+      if (enemyShip.isGoingOffScreen()) {
         dispose();
         game.setScreen(new GameOverScreen(game));
       }
@@ -101,7 +101,9 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    return false;
+    Gdx.app.log("App:", "x: " + screenX + ", y: " + screenY);
+    Gdx.app.log("App:", "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
+    return true;
   }
 
   @Override
@@ -126,8 +128,8 @@ public class GameScreen implements Screen, InputProcessor {
 
   private void getSpaceShip() {
     batch.begin();
-    for (SpaceShip spaceShip : spaceShips) {
-      spaceShip.render(batch);
+    for (EnemyShip enemyShip : enemyShips) {
+      enemyShip.render(batch);
     }
     batch.end();
   }
@@ -146,7 +148,7 @@ public class GameScreen implements Screen, InputProcessor {
 
   private void fillSpaceShips() {
     for (int i = 0; i < COUNT_SPACE_SHIPS; i++) {
-      spaceShips.add(new SpaceShip());
+      enemyShips.add(new EnemyShip());
     }
   }
 }

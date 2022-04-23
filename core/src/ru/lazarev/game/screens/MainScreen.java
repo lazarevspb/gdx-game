@@ -29,8 +29,8 @@ public class MainScreen implements Screen, InputProcessor {
         bitmapFont.setColor(Color.YELLOW);
         bitmapFont.getData().setScale(2, 1);
 
-        if (Gdx.graphics.getHeight() > 800) {
-            spaceFont = new SpaceFont(80);
+        if (Gdx.graphics.getWidth() > 800) {
+            spaceFont = new SpaceFont(150);
 
         } else {
             spaceFont = new SpaceFont(70);

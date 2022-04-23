@@ -9,17 +9,26 @@ import com.badlogic.gdx.math.Vector2;
 
 import static ru.lazarev.game.utils.GfxUtils.getAngle;
 
-public class SpaceShip {
+public class EnemyShip {
 
     private final Sprite sprite;
     private float x;
     private float y;
     private float speed;
 
-    public SpaceShip() {
+    public float getSpeed() {
+        return speed;
+    }
+
+    public EnemyShip() {
         TextureAtlas textureAtlas = new TextureAtlas("img/atlas/main.atlas");
         this.sprite = new Sprite(textureAtlas.findRegion("msTurret"));
-        this.speed = MathUtils.random(0.9f, 5.0f);
+        float speedRandom = MathUtils.random(0.9f, 7.0f);
+        if (Gdx.graphics.getHeight() > 800) {
+            speedRandom = speedRandom * 4;
+        }
+        speed = speedRandom;
+
         x = Gdx.graphics.getWidth() + 100;
         y = MathUtils.random(0, Gdx.graphics.getHeight() - sprite.getHeight());
     }
