@@ -9,8 +9,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class SpaceFont {
 
-  private BitmapFont spaceFont;
+  private final BitmapFont spaceFont;
 
+  @SuppressWarnings("SpellCheckingInspection")
   public SpaceFont(int size) {
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
         Gdx.files.internal("canis_minor_qdDyiV.ttf"));
@@ -29,6 +30,7 @@ public class SpaceFont {
     spaceFont.draw(batch, string, x, y);
   }
 
+  @SuppressWarnings("unused")
   public int getHeight() {
     return (int) spaceFont.getCapHeight();
   }

@@ -22,7 +22,6 @@ public class SpaceShip {
         this.speed = MathUtils.random(0.9f, 5.0f);
         x = Gdx.graphics.getWidth() + 100;
         y = MathUtils.random(0, Gdx.graphics.getHeight() - sprite.getHeight());
-
     }
 
     public void setSpeed(float speed) {
@@ -41,6 +40,9 @@ public class SpaceShip {
         Vector2 headPosition = new Vector2(x, y);
         sprite.setPosition(headPosition.x - headOrigin.x, headPosition.y - headOrigin.y);
         sprite.setRotation(getAngle(headPosition) + 90);
+        if (Gdx.graphics.getHeight() > 800) {
+            this.sprite.setScale(3f);
+        }
         sprite.draw(batch);
     }
 

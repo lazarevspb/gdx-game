@@ -39,6 +39,4 @@ public class MyAnimation {
     public void resetTime() {
         time = 0;
     }
-
-
 }

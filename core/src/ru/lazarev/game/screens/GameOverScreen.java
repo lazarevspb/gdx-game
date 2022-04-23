@@ -82,7 +82,12 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   @Override
   public boolean keyDown(int keycode) {
-    return false;
+    if (keycode == 66) {
+      game.setScreen(new MainScreen((game)));
+    } else if (keycode == 111) {
+      Gdx.app.exit();
+    }
+    return true;
   }
 
   @Override
