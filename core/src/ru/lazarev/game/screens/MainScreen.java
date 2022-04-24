@@ -1,9 +1,6 @@
 package ru.lazarev.game.screens;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,22 +51,18 @@ public class MainScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
@@ -82,19 +75,16 @@ public class MainScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         Gdx.app.log("app", "keyDown: " + keycode);
 
-        if (keycode == 66) {
+        if (keycode == Input.Keys.ENTER) {
             game.setScreen(new GameScreen(game));
-        } else if (keycode == 111) {
+        } else if (keycode == Input.Keys.ESCAPE) {
             Gdx.app.exit();
         }
-
-
         return true;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-
         return false;
     }
 
@@ -118,8 +108,6 @@ public class MainScreen implements Screen, InputProcessor {
             return true;
         }
         return false;
-
-
     }
 
     @Override

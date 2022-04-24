@@ -15,7 +15,6 @@ public class Explosion {
     private final Music music;
 
     public Explosion(TextureRegion textureRegion, Animation.PlayMode mode, int columns, int lines, int fps, String mName) {
-
         animation = new MyAnimation(textureRegion, mode, columns, lines, fps);
         music = Gdx.audio.newMusic(Gdx.files.internal(mName));
         music.play();

@@ -2,10 +2,7 @@ package ru.lazarev.game.screens;
 
 import static ru.lazarev.game.utils.GfxUtils.getPosition;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -93,9 +90,9 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   @Override
   public boolean keyDown(int keycode) {
-    if (keycode == 66) {
+    if (keycode == Input.Keys.ENTER) {
       game.setScreen(new MainScreen((game)));
-    } else if (keycode == 111) {
+    } else if (keycode == Input.Keys.ESCAPE) {
       Gdx.app.exit();
     }
     return true;

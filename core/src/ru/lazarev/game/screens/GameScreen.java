@@ -1,18 +1,18 @@
 package ru.lazarev.game.screens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
-import ru.lazarev.game.sprites.EnemyShip;
-import ru.lazarev.game.sprites.Turret;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
+import ru.lazarev.game.sprites.EnemyShip;
+import ru.lazarev.game.sprites.Turret;
+import ru.lazarev.game.utils.TargetPointer;
 
 public class GameScreen implements Screen, InputProcessor {
 
@@ -20,16 +20,16 @@ public class GameScreen implements Screen, InputProcessor {
   private final Game game;
   private static final int COUNT_SPACE_SHIPS = 2;
   private final List<EnemyShip> enemyShips;
-  private final ShapeRenderer shapeRenderer;
-  private final Rectangle mouseRectangle;
+  private final TargetPointer targetPointer;
+  private int numberOfHits;
 
   private final Turret turret;
+
   public GameScreen(Game game) {
     this.game = game;
     Gdx.input.setInputProcessor(this);
     batch = new SpriteBatch();
-    shapeRenderer = new ShapeRenderer();
-    mouseRectangle = new Rectangle();
+    targetPointer = new TargetPointer();
     enemyShips = new ArrayList<>();
     turret = new Turret();
     fillSpaceShips();
@@ -41,19 +41,32 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public void render(float delta) {
+
     ScreenUtils.clear(Color.BLACK);
     boolean fire = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
-    turret.render();
-    getTargetMouse();
-    getSpaceShip();
 
+    batch.begin();
+    turret.render(batch);
+    getSpaceShip();
+    batch.end();
+
+    targetPointer.render();
     for (EnemyShip enemyShip : enemyShips) {
-     turret.hitHandling(fire, enemyShip);
+      turret.hitHandling(fire);
+      if (fire) {
+        if (enemyShip.isDamage()) {
+          enemyShip.reuse();
+          numberOfHits++;
+        }
+      }
+
       if (enemyShip.isGoingOffScreen()) {
         dispose();
         game.setScreen(new GameOverScreen(game));
       }
     }
+
+    Gdx.graphics.setTitle("Спрайтов подбито: " + numberOfHits);
   }
 
   @Override
@@ -82,7 +95,7 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public boolean keyDown(int keycode) {
-    if (keycode == 111) {
+    if (keycode == Input.Keys.ESCAPE) {
       game.setScreen(new GameOverScreen(game));
     }
 
@@ -101,9 +114,10 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-    Gdx.app.log("App:", "x: " + screenX + ", y: " + screenY);
-    Gdx.app.log("App:", "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
-    return true;
+//    Gdx.app.log("App:", "x: " + screenX + ", y: " + screenY);
+//    Gdx.app.log("App:", "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
+//    return true;
+    return false;
   }
 
   @Override
@@ -127,23 +141,11 @@ public class GameScreen implements Screen, InputProcessor {
   }
 
   private void getSpaceShip() {
-    batch.begin();
+//    batch.begin();
     for (EnemyShip enemyShip : enemyShips) {
       enemyShip.render(batch);
     }
-    batch.end();
-  }
-
-  private void getTargetMouse() {
-    shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-    shapeRenderer.line(getPosition().x - 10, getPosition().y, getPosition().x + 10,
-        getPosition().y);
-    shapeRenderer.line(getPosition().x, getPosition().y - 10, getPosition().x,
-        getPosition().y + 10);
-    mouseRectangle.set(getPosition().x - 10, getPosition().y - 10, 20, 20);
-    shapeRenderer.rect(mouseRectangle.x, mouseRectangle.y, mouseRectangle.getWidth(),
-        mouseRectangle.getHeight());
-    shapeRenderer.end();
+//    batch.end();
   }
 
   private void fillSpaceShips() {
