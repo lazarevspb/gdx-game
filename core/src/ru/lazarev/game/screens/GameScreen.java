@@ -6,6 +6,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ public class GameScreen implements Screen, InputProcessor {
   private final TargetPointer targetPointer;
   private int numberOfHits;
 
+  private Sprite nightSkySprite;
+  private Texture nightSky;
+
   private final Turret turret;
 
   public GameScreen(Game game) {
@@ -32,6 +37,8 @@ public class GameScreen implements Screen, InputProcessor {
     targetPointer = new TargetPointer();
     enemyShips = new ArrayList<>();
     turret = new Turret();
+    nightSky = new Texture("img/farback.gif");
+    nightSkySprite = new Sprite(nightSky);
     fillSpaceShips();
   }
 
@@ -46,6 +53,16 @@ public class GameScreen implements Screen, InputProcessor {
     boolean fire = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
     batch.begin();
+//    batch.draw(nightSky, 0, 0);
+
+    if (Gdx.graphics.getWidth() > 800) {
+      nightSkySprite.setScale(2.5f);
+    } else {
+      nightSkySprite.setScale(0.9f);
+      nightSkySprite.setPosition(-100, -100);
+
+    }
+    nightSkySprite.draw(batch);
     turret.render(batch);
     getSpaceShip();
     batch.end();
@@ -141,11 +158,9 @@ public class GameScreen implements Screen, InputProcessor {
   }
 
   private void getSpaceShip() {
-//    batch.begin();
     for (EnemyShip enemyShip : enemyShips) {
       enemyShip.render(batch);
     }
-//    batch.end();
   }
 
   private void fillSpaceShips() {

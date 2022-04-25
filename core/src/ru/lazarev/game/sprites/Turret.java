@@ -80,13 +80,13 @@ public class Turret {
 
     ListIterator<Explosion> iterator = explosions.listIterator();
     while (iterator.hasNext()) {
-      Explosion ex = iterator.next();
-      ex.setTime(Gdx.graphics.getDeltaTime());
-      if (ex.isFinished()) {
-        ex.dispose();
+      Explosion explosion = iterator.next();
+      explosion.setTime(Gdx.graphics.getDeltaTime());
+      if (explosion.isFinished()) {
+        explosion.dispose();
         iterator.remove();
       } else {
-        batch.draw(ex.getRegion(), ex.getPos().x, ex.getPos().y);
+        batch.draw(explosion.getRegion(), explosion.getPos().x, explosion.getPos().y);
       }
     }
   }
