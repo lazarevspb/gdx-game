@@ -1,6 +1,6 @@
 package ru.lazarev.game.sprites;
 
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
+import static ru.lazarev.game.utils.GfxUtils.getCursorPosition;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.ListIterator;
 import ru.lazarev.game.animation.Explosion;
 import ru.lazarev.game.animation.MyAnimation;
+import ru.lazarev.game.utils.GfxUtils;
 
 public class Turret {
 
@@ -55,7 +56,7 @@ public class Turret {
 
   private void getTurretAttackHandling(SpriteBatch batch) {
     float rotation = 360
-        - MathUtils.atan2(getPosition().x - 25, getPosition().y - 34) * MathUtils.radiansToDegrees;
+        - MathUtils.atan2(GfxUtils.getCursorPosition().x - 25, GfxUtils.getCursorPosition().y - 34) * MathUtils.radiansToDegrees;
     if (!deploymentAnimation.isFinished()) {
       deploymentAnimation.setTime(Gdx.graphics.getDeltaTime());
 

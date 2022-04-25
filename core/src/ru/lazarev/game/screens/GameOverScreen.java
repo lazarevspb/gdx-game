@@ -1,8 +1,12 @@
 package ru.lazarev.game.screens;
 
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
+import static ru.lazarev.game.utils.GfxUtils.getCenterY;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,33 +14,45 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import ru.lazarev.game.fonts.SpaceFont;
+import ru.lazarev.game.utils.GfxUtils;
 
 public class GameOverScreen implements Screen, InputProcessor {
 
+  public static final String GAME_OVER = "GAME OVER";
+  public static final String NEW_GAME = "new game?";
+  public static final String EXIT = "exit";
   private final SpriteBatch batch;
   private final Game game;
   private final BitmapFont newGame;
   private final BitmapFont exit;
   private final SpaceFont gameOver;
+  private final Vector2 newGamePosition;
+  private final Vector2 sizeText;
+  private final Vector2 exitPosition;
 
   public GameOverScreen(Game game) {
     this.game = game;
     Gdx.input.setInputProcessor(this);
     batch = new SpriteBatch();
     if (Gdx.graphics.getHeight() > 800) {
-    gameOver = new SpaceFont(200);
+      gameOver = new SpaceFont(200);
 
     } else {
-    gameOver = new SpaceFont(70);
+      gameOver = new SpaceFont(70);
 
     }
     gameOver.setColor(Color.YELLOW);
     newGame = new BitmapFont();
     newGame.setColor(Color.YELLOW);
-    newGame.getData().setScale(2, 1);
+    newGame.getData().setScale(6, 4);
+
     exit = new BitmapFont();
     exit.setColor(Color.YELLOW);
-    exit.getData().setScale(2, 1);
+    exit.getData().setScale(6, 4);
+
+    newGamePosition = new Vector2(880, 370);
+    exitPosition = new Vector2(880, 160);
+    sizeText = new Vector2(460, 200);
   }
 
   @Override
@@ -46,19 +62,29 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   @Override
   public void render(float delta) {
-    final int centerX = Gdx.graphics.getWidth() >> 1;
-    final int centerY = Gdx.graphics.getHeight() >> 1;
     ScreenUtils.clear(Color.FIREBRICK);
     batch.begin();
 
     if (Gdx.graphics.getHeight() > 800) {
-      gameOver.draw(batch, "GAME OVER", (Gdx.graphics.getWidth() - gameOver.getWidth())/3, centerY + centerY/2);
+      gameOver.draw(batch, GAME_OVER, (Gdx.graphics.getWidth() - gameOver.getWidth()) / 4,
+          getCenterY() / 20 + getCenterY() / 2);
+      newGame.draw(batch, NEW_GAME,
+          getCenterScreen().x - ((newGame.getRegion().getRegionWidth() >> 1) + 136),
+          getCenterScreen().y - 100);
+      exit.draw(batch, EXIT,
+          getCenterScreen().x - ((newGame.getRegion().getRegionWidth() >> 1) + 136),
+          getCenterScreen().y - 200);
+
+
     } else {
-    gameOver.draw(batch, "GAME OVER", centerX - 180, centerY);
+      gameOver.draw(batch, GAME_OVER, GfxUtils.getCenterX() - 256, GfxUtils.getCenterY());
+      newGame.draw(batch, NEW_GAME, GfxUtils.getCenterX() + 20, GfxUtils.getCenterY() - 156);
+      exit.draw(batch, EXIT, GfxUtils.getCenterX() + 20, GfxUtils.getCenterY() - 186);
     }
-    newGame.draw(batch, "new game?", centerX + 20, centerY - 156);
-    exit.draw(batch, "exit", centerX + 20, centerY - 186);
     batch.end();
+//    GfxUtils.getRectangle(newGamePosition, sizeText);
+//    GfxUtils.getRectangle(exitPosition, sizeText);
+
   }
 
   @Override
@@ -86,6 +112,7 @@ public class GameOverScreen implements Screen, InputProcessor {
     newGame.dispose();
     exit.dispose();
     batch.dispose();
+
   }
 
   @Override
@@ -111,20 +138,20 @@ public class GameOverScreen implements Screen, InputProcessor {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     Gdx.app.log("App:", "x: " + screenX + ", y: " + screenY);
-    Gdx.app.log("App:", "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
+    Gdx.app.log("App:",
+        "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
     return true;
   }
 
   @Override
   public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-    Rectangle rectangle = getNewGameRectangle();
-    Rectangle exit = getExitRectangle();
-    Vector2 cursor = getPosition();
-    if (rectangle.contains(cursor)) {
+    Vector2 cursor = GfxUtils.getCursorPosition();
+
+    if (getNewGameRectangle().contains(cursor)) {
       dispose();
       game.setScreen(new MainScreen(game));
       return true;
-    } else if (exit.contains(cursor)) {
+    } else if (getExitRectangle().contains(cursor)) {
       dispose();
       Gdx.app.exit();
       return true;
@@ -141,7 +168,9 @@ public class GameOverScreen implements Screen, InputProcessor {
   public boolean mouseMoved(int screenX, int screenY) {
     Rectangle newGame = getNewGameRectangle();
     Rectangle exit = getExitRectangle();
-    Vector2 cursor = getPosition();
+
+    Vector2 cursor = GfxUtils.getCursorPosition();
+
     if (newGame.contains(cursor)) {
       this.newGame.setColor(Color.BLUE);
       return true;
@@ -162,14 +191,14 @@ public class GameOverScreen implements Screen, InputProcessor {
 
   private Rectangle getNewGameRectangle() {
 
-    return new Rectangle(getCenterScreen().x + 18, getCenterScreen().y - 174, 150, 20);
+    return new Rectangle(newGamePosition.x, newGamePosition.y, sizeText.x, sizeText.y);
   }
 
   private Rectangle getExitRectangle() {
-    return new Rectangle(getCenterScreen().x + 18, getCenterScreen().y - 204, 150, 20);
+    return new Rectangle(exitPosition.x, exitPosition.y, sizeText.x, sizeText.y);
   }
 
   private Vector2 getCenterScreen() {
-    return new Vector2(Gdx.graphics.getHeight() >> 1, Gdx.graphics.getWidth() >> 1);
+    return new Vector2(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1);
   }
 }

@@ -1,6 +1,10 @@
 package ru.lazarev.game.screens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,8 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import ru.lazarev.game.fonts.SpaceFont;
-
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
+import ru.lazarev.game.utils.GfxUtils;
 
 public class MainScreen implements Screen, InputProcessor {
 
@@ -47,6 +50,8 @@ public class MainScreen implements Screen, InputProcessor {
         bitmapFont.draw(batch, "Start Game", 58, 100);
         spaceFont.draw(batch, "STAR WARS", 58, 250);
         batch.end();
+
+
     }
 
     @Override
@@ -101,7 +106,7 @@ public class MainScreen implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Rectangle rectangle = getStartGameRectangle();
-        Vector2 vector = getPosition();
+        Vector2 vector = GfxUtils.getCursorPosition();
         if (rectangle.contains(vector)) {
             dispose();
             game.setScreen(new GameScreen(game));
@@ -118,7 +123,7 @@ public class MainScreen implements Screen, InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         Rectangle rectangle = getStartGameRectangle();
-        Vector2 vector = getPosition();
+        Vector2 vector = GfxUtils.getCursorPosition();
         if (rectangle.contains(vector)) {
             bitmapFont.setColor(Color.RED);
             return true;

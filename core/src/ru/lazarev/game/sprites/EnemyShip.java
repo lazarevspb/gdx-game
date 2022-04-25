@@ -1,14 +1,14 @@
 package ru.lazarev.game.sprites;
 
+import static ru.lazarev.game.utils.GfxUtils.getAngle;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-
-import static ru.lazarev.game.utils.GfxUtils.getAngle;
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
+import ru.lazarev.game.utils.GfxUtils;
 
 public class EnemyShip {
 
@@ -58,7 +58,7 @@ public class EnemyShip {
     }
 
     public boolean isDamage() {
-        return this.getSprite().getBoundingRectangle().contains(getPosition());
+        return this.getSprite().getBoundingRectangle().contains(GfxUtils.getCursorPosition());
     }
 
     public void reuse() {

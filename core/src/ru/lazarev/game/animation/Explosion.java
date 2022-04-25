@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import static ru.lazarev.game.utils.GfxUtils.getPosition;
+import static ru.lazarev.game.utils.GfxUtils.getCursorPosition;
 
 
 public class Explosion {
@@ -18,7 +18,7 @@ public class Explosion {
         animation = new MyAnimation(textureRegion, mode, columns, lines, fps);
         music = Gdx.audio.newMusic(Gdx.files.internal(mName));
         music.play();
-        position = getPosition(animation.getRegion().getRegionWidth(), animation.getRegion().getRegionHeight());
+        position = getCursorPosition(animation.getRegion().getRegionWidth(), animation.getRegion().getRegionHeight());
     }
 
     public void setTime(float dTime) {

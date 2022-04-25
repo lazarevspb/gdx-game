@@ -25,9 +25,7 @@ public class GameScreen implements Screen, InputProcessor {
   private final TargetPointer targetPointer;
   private int numberOfHits;
 
-  private Sprite nightSkySprite;
-  private Texture nightSky;
-
+  private final Sprite nightSkySprite;
   private final Turret turret;
 
   public GameScreen(Game game) {
@@ -37,7 +35,7 @@ public class GameScreen implements Screen, InputProcessor {
     targetPointer = new TargetPointer();
     enemyShips = new ArrayList<>();
     turret = new Turret();
-    nightSky = new Texture("img/farback.gif");
+    Texture nightSky = new Texture("img/farback.gif");
     nightSkySprite = new Sprite(nightSky);
     fillSpaceShips();
   }
@@ -53,8 +51,6 @@ public class GameScreen implements Screen, InputProcessor {
     boolean fire = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
     batch.begin();
-//    batch.draw(nightSky, 0, 0);
-
     if (Gdx.graphics.getWidth() > 800) {
       nightSkySprite.setScale(2.5f);
     } else {
