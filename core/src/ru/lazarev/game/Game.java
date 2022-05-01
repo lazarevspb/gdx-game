@@ -6,11 +6,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import ru.lazarev.game.animation.Explosion;
 import ru.lazarev.game.animation.MyAnimation;
+import ru.lazarev.game.sprites.SpaceShip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.ListIterator;
 import static ru.lazarev.game.utils.GfxUtils.getPosition;
 
 public class Game extends ApplicationAdapter {
+    private static final int COUNT_SPACE_SHIPS = 2;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer;
     private MyAnimation turretAnimation;
@@ -26,27 +30,61 @@ public class Game extends ApplicationAdapter {
     private MyAnimation headAnimation;
     private List<Explosion> explosions;
 
+    private List<SpaceShip> spaceShips;
+    private TextureAtlas textureAtlas;
+    private Rectangle mouseRectangle;
+    private int numberOfHits;
+
     @Override
     public void create() {
+        textureAtlas = new TextureAtlas("img/atlas/main.atlas");
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        mouseRectangle = new Rectangle();
         explosions = new ArrayList<>();
-        turretAnimation = new MyAnimation("img/turret-sprites-deployment.png", Animation.PlayMode.NORMAL, 8, 1, 8);
-        bodyAnimation = new MyAnimation("img/turret-sprites-body.png", Animation.PlayMode.LOOP, 2, 1, 16);
-        headAnimation = new MyAnimation("img/turret-sprites-head-shot-idle.png", Animation.PlayMode.NORMAL, 5, 1, 60);
+        spaceShips = new ArrayList<>();
+        fillSpaceShips();
+        turretAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-deployment"), Animation.PlayMode.NORMAL, 8, 1, 8);
+        bodyAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-body"), Animation.PlayMode.LOOP, 2, 1, 16);
+        headAnimation = new MyAnimation(textureAtlas.findRegion("turret-sprites-head-shot-idle"), Animation.PlayMode.NORMAL, 5, 1, 60);
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(Color.FOREST);
-        float rotation = 360 - MathUtils.atan2(getPosition().x - 25, getPosition().y - 34) * MathUtils.radiansToDegrees;
         boolean fire = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
+        getTurretAttackHandling();
+        getTargetMouse();
+        getSpaceShip();
+
+        for (SpaceShip spaceShip : spaceShips) {
+            hitHandling(fire, spaceShip);
+            if (spaceShip.isGoingOffScreen()) {
+                Gdx.app.exit();
+            }
+        }
+    }
+
+    private void getSpaceShip() {
+        batch.begin();
+        for (SpaceShip spaceShip : spaceShips) {
+            spaceShip.render(batch);
+        }
+        batch.end();
+    }
+
+    private void getTargetMouse() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.line(getPosition().x - 10, getPosition().y, getPosition().x + 10, getPosition().y);
         shapeRenderer.line(getPosition().x, getPosition().y - 10, getPosition().x, getPosition().y + 10);
+        mouseRectangle.set(getPosition().x - 10, getPosition().y - 10, 20, 20);
+        shapeRenderer.rect(mouseRectangle.x, mouseRectangle.y, mouseRectangle.getWidth(), mouseRectangle.getHeight());
         shapeRenderer.end();
+    }
 
+    private void getTurretAttackHandling() {
+        float rotation = 360 - MathUtils.atan2(getPosition().x - 25, getPosition().y - 34) * MathUtils.radiansToDegrees;
         batch.begin();
         if (!turretAnimation.isFinished()) {
             turretAnimation.setTime(Gdx.graphics.getDeltaTime());
@@ -68,25 +106,33 @@ public class Game extends ApplicationAdapter {
             }
         }
         batch.end();
+    }
 
+    private void hitHandling(boolean fire, SpaceShip ship) {
         if ((fire & !headAnimation.isFinished()) || (!fire & !headAnimation.isFinished()))
             headAnimation.setTime(Gdx.graphics.getDeltaTime());
-
         if (fire & headAnimation.isFinished()) {
             headAnimation.resetTime();
-            explosions.add(
-                    new Explosion(
-                            "img/explosion-sprite.png", Animation.PlayMode.NORMAL, 4, 4, 16, "audio/explosion.mp3"));
+            explosions.add(new Explosion(textureAtlas.findRegion("explosion"), Animation.PlayMode.NORMAL, 4, 4, 16, "audio/explosion.mp3"));
+            if (ship.getSprite().getBoundingRectangle().contains(getPosition())) {
+                ship.setX(Gdx.graphics.getWidth() + 100);
+                ship.setY(MathUtils.random(0, Gdx.graphics.getHeight() - ship.getSprite().getHeight()));
+                ship.setSpeed(MathUtils.random(0.9f, 7.0f));
+                numberOfHits++;
+            }
         }
-        Gdx.graphics.setTitle(String.valueOf(explosions.size()));
+        Gdx.graphics.setTitle("Спрайтов подбито: " + numberOfHits);
+    }
+
+    private void fillSpaceShips() {
+        for (int i = 0; i < COUNT_SPACE_SHIPS; i++) {
+            spaceShips.add(new SpaceShip());
+        }
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        bodyAnimation.dispose();
-        headAnimation.dispose();
-        turretAnimation.dispose();
         shapeRenderer.dispose();
     }
 }

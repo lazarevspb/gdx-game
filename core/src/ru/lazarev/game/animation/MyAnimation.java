@@ -7,11 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class MyAnimation {
     private final Animation<TextureRegion> animation;
     private float time;
-    private final Texture texture;
 
-    public MyAnimation(String name, Animation.PlayMode mode, int columns, int lines, int fps) {
-        texture = new Texture(name);
-        TextureRegion[][] tmpRegion = new TextureRegion(texture).split(texture.getWidth() / columns, texture.getHeight() / lines);
+    public MyAnimation(TextureRegion textureRegion , Animation.PlayMode mode, int columns, int lines, int fps) {
+        TextureRegion[][] tmpRegion = textureRegion.split(textureRegion.getRegionWidth() / columns,
+                textureRegion.getRegionHeight() / lines);
         TextureRegion[] regions = new TextureRegion[tmpRegion.length * tmpRegion[0].length];
         int count = 0;
 
@@ -41,7 +40,5 @@ public class MyAnimation {
         time = 0;
     }
 
-    public void dispose() {
-        texture.dispose();
-    }
+
 }
