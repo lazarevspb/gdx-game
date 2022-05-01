@@ -6,37 +6,34 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
-import ru.lazarev.game.fonts.SpaceFont;
+import ru.lazarev.game.fonts.MainFont;
+import ru.lazarev.game.fonts.TitleFont;
 import ru.lazarev.game.utils.GfxUtils;
 
 public class MainScreen implements Screen, InputProcessor {
 
+    public static final String START_GAME = "Start Game";
+    public static final String NAME_GAME = "STAR WARS";
     private final Game game;
     private final SpriteBatch batch;
-    private final BitmapFont bitmapFont;
-    private final SpaceFont spaceFont;
+    private final MainFont startGameText;
+    private final TitleFont titleFont;
 
     public MainScreen(Game game) {
         this.game = game;
         Gdx.input.setInputProcessor(this);
         batch = new SpriteBatch();
-        bitmapFont = new BitmapFont();
-        bitmapFont.setColor(Color.YELLOW);
-        bitmapFont.getData().setScale(2, 1);
+        startGameText = new MainFont(START_GAME, new Vector2(58, 100), 2, 1);
 
         if (Gdx.graphics.getWidth() > 800) {
-            spaceFont = new SpaceFont(150);
-
+            titleFont = new TitleFont(150);
         } else {
-            spaceFont = new SpaceFont(70);
+            titleFont = new TitleFont(70);
         }
-
-        spaceFont.setColor(Color.YELLOW);
+        titleFont.setColor(Color.YELLOW);
     }
 
     @Override
@@ -47,11 +44,9 @@ public class MainScreen implements Screen, InputProcessor {
     public void render(float delta) {
         ScreenUtils.clear(Color.BLUE);
         batch.begin();
-        bitmapFont.draw(batch, "Start Game", 58, 100);
-        spaceFont.draw(batch, "STAR WARS", 58, 250);
+        startGameText.draw(batch);
+        titleFont.draw(batch, NAME_GAME, new Vector2(58, 250));
         batch.end();
-
-
     }
 
     @Override
@@ -73,7 +68,7 @@ public class MainScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         batch.dispose();
-        bitmapFont.dispose();
+        startGameText.dispose();
     }
 
     @Override
@@ -105,9 +100,8 @@ public class MainScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Rectangle rectangle = getStartGameRectangle();
-        Vector2 vector = GfxUtils.getCursorPosition();
-        if (rectangle.contains(vector)) {
+        Vector2 cursor = GfxUtils.getCursorPosition();
+        if (startGameText.getBoundingRectangle().contains(cursor)) {
             dispose();
             game.setScreen(new GameScreen(game));
             return true;
@@ -122,19 +116,14 @@ public class MainScreen implements Screen, InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        Rectangle rectangle = getStartGameRectangle();
-        Vector2 vector = GfxUtils.getCursorPosition();
-        if (rectangle.contains(vector)) {
-            bitmapFont.setColor(Color.RED);
+        Vector2 cursor = GfxUtils.getCursorPosition();
+        if (startGameText.getBoundingRectangle().contains(cursor)) {
+            startGameText.setColor(Color.RED);
             return true;
         } else {
-            bitmapFont.setColor(Color.YELLOW);
+            startGameText.setColor(Color.YELLOW);
         }
         return false;
-    }
-
-    private Rectangle getStartGameRectangle() {
-        return new Rectangle(56, 84, 150, 20);
     }
 
     @Override

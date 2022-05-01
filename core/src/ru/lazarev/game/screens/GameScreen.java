@@ -20,10 +20,13 @@ public class GameScreen implements Screen, InputProcessor {
 
   private final SpriteBatch batch;
   private final Game game;
-  private static final int COUNT_SPACE_SHIPS = 2;
+  @SuppressWarnings("FieldCanBeLocal")
+  private final int totalShips = 2;
   private final List<EnemyShip> enemyShips;
   private final TargetPointer targetPointer;
   private int numberOfHits;
+
+  private int spent;
 
   private final Sprite nightSkySprite;
   private final Turret turret;
@@ -35,9 +38,10 @@ public class GameScreen implements Screen, InputProcessor {
     targetPointer = new TargetPointer();
     enemyShips = new ArrayList<>();
     turret = new Turret();
+    @SuppressWarnings("SpellCheckingInspection")
     Texture nightSky = new Texture("img/farback.gif");
     nightSkySprite = new Sprite(nightSky);
-    fillSpaceShips();
+    fillSpaceShips(totalShips);
   }
 
   @Override
@@ -70,16 +74,22 @@ public class GameScreen implements Screen, InputProcessor {
         if (enemyShip.isDamage()) {
           enemyShip.reuse();
           numberOfHits++;
+          spent++;
         }
       }
-
       if (enemyShip.isGoingOffScreen()) {
         dispose();
         game.setScreen(new GameOverScreen(game));
       }
     }
 
-    Gdx.graphics.setTitle("Спрайтов подбито: " + numberOfHits);
+    if (spent == enemyShips.size()) {
+      spent = 0;
+      fillSpaceShips(1);
+
+    }
+
+    Gdx.graphics.setTitle(String.format("Спрайтов подбито: %d, Всего врагов: %d", numberOfHits, enemyShips.size()));
   }
 
   @Override
@@ -128,8 +138,6 @@ public class GameScreen implements Screen, InputProcessor {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 //    Gdx.app.log("App:", "x: " + screenX + ", y: " + screenY);
-//    Gdx.app.log("App:", "graphicsX: " + Gdx.graphics.getWidth() + ", graphicsY: " + Gdx.graphics.getHeight());
-//    return true;
     return false;
   }
 
@@ -159,8 +167,8 @@ public class GameScreen implements Screen, InputProcessor {
     }
   }
 
-  private void fillSpaceShips() {
-    for (int i = 0; i < COUNT_SPACE_SHIPS; i++) {
+  private void fillSpaceShips(int count) {
+    for (int i = 0; i < count; i++) {
       enemyShips.add(new EnemyShip());
     }
   }

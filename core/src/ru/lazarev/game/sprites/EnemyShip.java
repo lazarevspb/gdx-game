@@ -29,7 +29,8 @@ public class EnemyShip {
         if (Gdx.graphics.getHeight() > 800) {
             speedRandom = speedRandom * 4;
         }
-        speed = speedRandom;
+//        speed = speedRandom;
+        speed = speedRandom/4; //временно, иначе быстро пролетают по экрану
 
         x = Gdx.graphics.getWidth() + 100;
         y = MathUtils.random(0, Gdx.graphics.getHeight() - sprite.getHeight());
