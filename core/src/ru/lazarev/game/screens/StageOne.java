@@ -12,8 +12,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
 import java.util.List;
-import ru.lazarev.game.sprites.EnemyShip;
-import ru.lazarev.game.sprites.Turret;
+import ru.lazarev.game.game_objects.EnemyShip;
+import ru.lazarev.game.game_objects.Turret;
 import ru.lazarev.game.utils.TargetPointer;
 
 public class StageOne implements Screen, InputProcessor {
