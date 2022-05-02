@@ -21,6 +21,16 @@ public class Explosion {
         position = getCursorPosition(animation.getRegion().getRegionWidth(), animation.getRegion().getRegionHeight());
     }
 
+    private float damage;
+
+    public Explosion(TextureRegion region, Animation.PlayMode mode, int columns, int lines, int fps, String mName, float damage){
+        animation = new MyAnimation(region, mode, columns, lines, fps);
+        music = Gdx.audio.newMusic(Gdx.files.internal(mName));
+        music.play();
+        position = getCursorPosition(animation.getRegion().getRegionWidth(), animation.getRegion().getRegionHeight());
+        this.damage = damage;
+    }
+
     public void setTime(float dTime) {
         animation.setTime(dTime);
     }
@@ -40,4 +50,8 @@ public class Explosion {
     public void dispose() {
         music.dispose();
     }
+
+    public void setDamage(float damage) { this.damage = damage;}
+
+    public float getDamage(){return damage;}
 }

@@ -76,7 +76,7 @@ public class MainScreen implements Screen, InputProcessor {
         Gdx.app.log("app", "keyDown: " + keycode);
 
         if (keycode == Input.Keys.ENTER) {
-            game.setScreen(new GameScreen(game));
+            game.setScreen(new StageOne(game));
         } else if (keycode == Input.Keys.ESCAPE) {
             Gdx.app.exit();
         }
@@ -103,7 +103,7 @@ public class MainScreen implements Screen, InputProcessor {
         Vector2 cursor = GfxUtils.getCursorPosition();
         if (startGameText.getBoundingRectangle().contains(cursor)) {
             dispose();
-            game.setScreen(new GameScreen(game));
+            game.setScreen(new StageOne(game));
             return true;
         }
         return false;

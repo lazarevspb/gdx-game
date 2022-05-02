@@ -16,7 +16,7 @@ import ru.lazarev.game.sprites.EnemyShip;
 import ru.lazarev.game.sprites.Turret;
 import ru.lazarev.game.utils.TargetPointer;
 
-public class GameScreen implements Screen, InputProcessor {
+public class StageOne implements Screen, InputProcessor {
 
   private final SpriteBatch batch;
   private final Game game;
@@ -31,7 +31,7 @@ public class GameScreen implements Screen, InputProcessor {
   private final Sprite nightSkySprite;
   private final Turret turret;
 
-  public GameScreen(Game game) {
+  public StageOne(Game game) {
     this.game = game;
     Gdx.input.setInputProcessor(this);
     batch = new SpriteBatch();
@@ -41,7 +41,7 @@ public class GameScreen implements Screen, InputProcessor {
     @SuppressWarnings("SpellCheckingInspection")
     Texture nightSky = new Texture("img/farback.gif");
     nightSkySprite = new Sprite(nightSky);
-    fillSpaceShips(totalShips);
+    addSpaceShips(totalShips);
   }
 
   @Override
@@ -81,12 +81,20 @@ public class GameScreen implements Screen, InputProcessor {
         dispose();
         game.setScreen(new GameOverScreen(game));
       }
+      if (numberOfHits == 5) {
+        dispose();
+        game.setScreen(new StageTwo(game));
+      }
     }
+
+
+
+
+
 
     if (spent == enemyShips.size()) {
       spent = 0;
-      fillSpaceShips(1);
-
+      addSpaceShips(1);
     }
 
     Gdx.graphics.setTitle(String.format("Спрайтов подбито: %d, Всего врагов: %d", numberOfHits, enemyShips.size()));
@@ -113,7 +121,7 @@ public class GameScreen implements Screen, InputProcessor {
 
   @Override
   public void dispose() {
-    batch.dispose();
+//    batch.dispose();
   }
 
   @Override
@@ -167,7 +175,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
   }
 
-  private void fillSpaceShips(int count) {
+  private void addSpaceShips(int count) {
     for (int i = 0; i < count; i++) {
       enemyShips.add(new EnemyShip());
     }
