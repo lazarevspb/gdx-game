@@ -1,4 +1,4 @@
-package ru.lazarev.game.sprites;
+package ru.lazarev.game.game_objects;
 
 import static ru.lazarev.game.utils.GfxUtils.getAngle;
 
