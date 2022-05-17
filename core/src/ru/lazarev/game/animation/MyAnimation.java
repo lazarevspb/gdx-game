@@ -31,7 +31,6 @@ public class MyAnimation {
 
   public void setTime(float dTime) {
     time += dTime;
-//        time += dTime * Gdx.graphics.getDeltaTime();
   }
 
   public boolean isFinished() {

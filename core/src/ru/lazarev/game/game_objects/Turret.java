@@ -1,6 +1,4 @@
-package ru.lazarev.game.sprites;
-
-import static ru.lazarev.game.utils.GfxUtils.getCursorPosition;
+package ru.lazarev.game.game_objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;

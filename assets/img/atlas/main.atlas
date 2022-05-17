@@ -1,40 +1,110 @@
 
 main.png
-size: 950, 516
+size: 1024, 1024
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+HelpButton
+  rotate: false
+  xy: 2, 100
+  size: 256, 140
+  orig: 256, 140
+  offset: 0, 0
+  index: -1
+HelpButtonHighlight
+  rotate: false
+  xy: 2, 242
+  size: 256, 140
+  orig: 256, 140
+  offset: 0, 0
+  index: -1
+PlayButton
+  rotate: false
+  xy: 260, 242
+  size: 256, 140
+  orig: 256, 140
+  offset: 0, 0
+  index: -1
+PlayButtonHighlight
+  rotate: false
+  xy: 516, 529
+  size: 256, 140
+  orig: 256, 140
+  offset: 0, 0
+  index: -1
+QuitButton
+  rotate: false
+  xy: 516, 813
+  size: 256, 140
+  orig: 256, 140
+  offset: 0, 0
+  index: -1
+QuitButtonHighlight
+  rotate: false
+  xy: 516, 671
+  size: 256, 140
+  orig: 256, 140
+  offset: 0, 0
+  index: -1
+enemy
+  rotate: false
+  xy: 2, 384
+  size: 465, 104
+  orig: 465, 104
+  offset: 0, 0
+  index: -1
 explosion
   rotate: false
-  xy: 2, 2
+  xy: 2, 490
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
+msSmallGun
+  rotate: false
+  xy: 469, 467
+  size: 14, 21
+  orig: 14, 21
+  offset: 0, 0
+  index: -1
 msTurret
   rotate: false
-  xy: 788, 423
+  xy: 950, 960
   size: 60, 42
   orig: 60, 42
   offset: 0, 0
   index: -1
+turret-highlights-body
+  rotate: false
+  xy: 2, 2
+  size: 162, 47
+  orig: 162, 47
+  offset: 0, 0
+  index: -1
 turret-sprites-body
   rotate: false
-  xy: 516, 369
+  xy: 260, 193
   size: 108, 47
   orig: 108, 47
   offset: 0, 0
   index: -1
 turret-sprites-deployment
   rotate: false
-  xy: 516, 467
+  xy: 516, 955
   size: 432, 47
   orig: 432, 47
   offset: 0, 0
   index: -1
+turret-sprites-head-shot
+  rotate: false
+  xy: 774, 906
+  size: 162, 47
+  orig: 162, 47
+  offset: 0, 0
+  index: -1
 turret-sprites-head-shot-idle
   rotate: false
-  xy: 516, 418
+  xy: 2, 51
   size: 270, 47
   orig: 270, 47
   offset: 0, 0
