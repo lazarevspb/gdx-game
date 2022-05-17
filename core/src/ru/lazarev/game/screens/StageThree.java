@@ -27,23 +27,32 @@ import ru.lazarev.game.game_objects.BaseEnemy;
 import ru.lazarev.game.game_objects.BigShip;
 
 public class StageThree implements Screen, InputProcessor {
+
   final Game game;
 
   SpriteBatch batch;
   ShapeRenderer shapeRenderer;
-  MyAnimation turretAnm, bodyAnim, headAnim;
+  MyAnimation turretAnm;
+  MyAnimation bodyAnim;
+  MyAnimation headAnim;
   List<Explosion> explosions;
-  Sprite headSpr, tBase;
+  Sprite tBase;
   public static TextureAtlas mainAtlas;
-  float x, y;
-  int cnt, enemyOnScreen, enemyAll;
+  float x;
+  int cnt;
+  int enemyOnScreen;
+  int enemyAll;
   List<BigShip> enemyList;
-  float enemyTime, enemyTimeCnt, damage;
-  private Texture fon, turretBase;
+  float enemyTime;
+  float enemyTimeCnt;
+  float damage;
+  private final Texture fon;
+  private final Texture turretBase;
   public static float life;
-  private ShaderProgram shaderNormal, shaderInvert, shaderAlpha;
+  private final ShaderProgram shaderNormal;
+  private final ShaderProgram shaderAlpha;
 
-  public StageThree(Game game){
+  public StageThree(Game game) {
     this.game = game;
     Gdx.input.setInputProcessor(this);
 
@@ -53,8 +62,8 @@ public class StageThree implements Screen, InputProcessor {
     turretBase = new Texture("img/gameTurretBase.png");
 
     tBase = new Sprite(turretBase);
-    tBase.setPosition(-150,-60);
-    tBase.setOrigin(turretBase.getWidth()/2, turretBase.getHeight()/2);
+    tBase.setPosition(-150, -60);
+    tBase.setOrigin(turretBase.getWidth() >> 1, turretBase.getHeight() >> 1);
     tBase.setRotation(6);
 
     enemyList = new ArrayList<>();
@@ -66,20 +75,22 @@ public class StageThree implements Screen, InputProcessor {
     damage = 1;
     cnt = 0;
     batch = new SpriteBatch();
-    x = Gdx.graphics.getWidth()+100;
+    x = Gdx.graphics.getWidth() + 100;
     shapeRenderer = new ShapeRenderer();
     mainAtlas = new TextureAtlas("img/atlas/main.atlas");
     explosions = new ArrayList<>();
-    turretAnm = new MyAnimation(mainAtlas.findRegion("turret-sprites-deployment"), Animation.PlayMode.NORMAL, 8, 1, 8);
-    bodyAnim = new MyAnimation(mainAtlas.findRegion("turret-sprites-body"), Animation.PlayMode.LOOP, 2, 1, 16);
-    headAnim = new MyAnimation(mainAtlas.findRegion("turret-sprites-head-shot-idle"), Animation.PlayMode.NORMAL, 5, 1, 60);
+    turretAnm = new MyAnimation(mainAtlas.findRegion("turret-sprites-deployment"),
+        Animation.PlayMode.NORMAL, 8, 1, 8);
+    bodyAnim = new MyAnimation(mainAtlas.findRegion("turret-sprites-body"), Animation.PlayMode.LOOP,
+        2, 1, 16);
+    headAnim = new MyAnimation(mainAtlas.findRegion("turret-sprites-head-shot-idle"),
+        Animation.PlayMode.NORMAL, 5, 1, 60);
 
     String vertex = Gdx.files.internal("shaders/normal/VERTEX").readString();
     String fragment = Gdx.files.internal("shaders/normal/FRAGMENT").readString();
     shaderNormal = new ShaderProgram(vertex, fragment);
     vertex = Gdx.files.internal("shaders/invert/VERTEX").readString();
     fragment = Gdx.files.internal("shaders/invert/FRAGMENT").readString();
-    shaderInvert = new ShaderProgram(vertex, fragment);
     vertex = Gdx.files.internal("shaders/grayscale/VERTEX").readString();
     fragment = Gdx.files.internal("shaders/grayscale/FRAGMENT").readString();
     shaderAlpha = new ShaderProgram(vertex, fragment);
@@ -93,22 +104,23 @@ public class StageThree implements Screen, InputProcessor {
   @Override
   public void render(float delta) {
 
-    if (life < 0 ) {
+    if (life < 0) {
       dispose();
       game.setScreen(new MainScreen(game));
     }
 
-    if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+    if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+      Gdx.app.exit();
+    }
     ScreenUtils.clear(Color.FOREST);
 
-    boolean fire =false;
-    if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) fire=true;
+    boolean fire = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
 
     batch.begin();
-    batch.draw(fon, 0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    batch.draw(fon, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     batch.setShader(shaderAlpha);
-    shaderAlpha.setUniformf("inFloat", life/100.0f);
+    shaderAlpha.setUniformf("inFloat", life / 100.0f);
 
     tBase.draw(batch);
     if (!turretAnm.isFinished()) {
@@ -117,20 +129,21 @@ public class StageThree implements Screen, InputProcessor {
     } else {
       bodyAnim.setTime(Gdx.graphics.getDeltaTime());
       batch.draw(bodyAnim.getRegion(), 0, 0);
-      batch.draw(headAnim.getRegion(), 11, 12,14,22, headAnim.getRegion().getRegionWidth(),headAnim.getRegion().getRegionHeight(), 1,1,getAngle(new Vector2(0,0)),false);
+      batch.draw(headAnim.getRegion(), 11, 12, 14, 22, headAnim.getRegion().getRegionWidth(),
+          headAnim.getRegion().getRegionHeight(), 1, 1, getAngle(new Vector2(0, 0)), false);
     }
     batch.setShader(shaderNormal);
-    ListIterator<BigShip> iterator1  = enemyList.listIterator();
-    while (iterator1.hasNext()){
-      BaseEnemy enemy = iterator1.next();
+    for (BaseEnemy enemy : enemyList) {
       enemy.step();
       enemy.draw(batch);
       Vector2 tmpVector = enemy.getPosition();
-      if (tmpVector.x < -enemy.getSkin().getWidth()) life = -1;
+      if (tmpVector.x < -enemy.getSkin().getWidth()) {
+        life = -1;
+      }
     }
 
     ListIterator<Explosion> iterator = explosions.listIterator();
-    while (iterator.hasNext()){
+    while (iterator.hasNext()) {
       Explosion ex = iterator.next();
       ex.setTime(Gdx.graphics.getDeltaTime());
       if (ex.isFinished()) {
@@ -141,34 +154,39 @@ public class StageThree implements Screen, InputProcessor {
       }
     }
 
-    ShaderProgram s = batch.getShader();
     batch.end();
 
-    if ((fire & !headAnim.isFinished()) || (!fire & !headAnim.isFinished())) headAnim.setTime(Gdx.graphics.getDeltaTime());
+    if ((fire & !headAnim.isFinished()) || (!fire & !headAnim.isFinished())) {
+      headAnim.setTime(Gdx.graphics.getDeltaTime());
+    }
     if (fire & headAnim.isFinished()) {
       headAnim.resetTime();
-      explosions.add(new Explosion(mainAtlas.findRegion("explosion"), Animation.PlayMode.NORMAL, 4, 4, 16, "audio/explosion.mp3", damage));
-      iterator1  = enemyList.listIterator(enemyList.size());
-      while (iterator1.hasPrevious()){
+      explosions.add(
+          new Explosion(mainAtlas.findRegion("explosion"), Animation.PlayMode.NORMAL, 4, 4, 16,
+              "audio/explosion.mp3", damage));
+      ListIterator<BigShip> iterator1 = enemyList.listIterator(enemyList.size());
+      while (iterator1.hasPrevious()) {
         BaseEnemy enemy = iterator1.previous();
         if (enemy.isHit(getCursorPosition())) {
-          if (enemy.damage(explosions.get(explosions.size()-1).getDamage())<0) iterator1.remove();
-          explosions.get(explosions.size()-1).setDamage(0);
+          if (enemy.damage(explosions.get(explosions.size() - 1).getDamage()) < 0) {
+            iterator1.remove();
+          }
+          explosions.get(explosions.size() - 1).setDamage(0);
           cnt++;
           break;
         }
       }
     }
-    Gdx.graphics.setTitle("Врагов подбито: "+String.valueOf(cnt));
+    Gdx.graphics.setTitle("Врагов подбито: " + cnt);
 
     enemyTimeCnt += Gdx.graphics.getDeltaTime();
-    if (enemyTimeCnt > enemyTime && enemyList.size()<enemyOnScreen) {
+    if (enemyTimeCnt > enemyTime && enemyList.size() < enemyOnScreen) {
       enemyTimeCnt = 0;
       enemyList.add(new BigShip("enemy", 0.5f, 50, 1, 1, 16));
       enemyAll--;
     }
 
-    if (enemyAll<1 && enemyList.size()<1) {
+    if (enemyAll < 1 && enemyList.size() < 1) {
       dispose();
       game.setScreen(new StageThree(game));
     }

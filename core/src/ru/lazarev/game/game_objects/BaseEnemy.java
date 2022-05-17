@@ -2,7 +2,6 @@ package ru.lazarev.game.game_objects;
 
 
 import static ru.lazarev.game.screens.StageTwo.mainAtlas;
-import static ru.lazarev.game.utils.GfxUtils.getAngle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -19,7 +18,7 @@ public class BaseEnemy {
 
   public static final TextureAtlas MAIN_ATLAS = new TextureAtlas("img/atlas/main.atlas");
   protected Vector2 position;
-  protected Vector2 rotate;
+  @SuppressWarnings("SpellCheckingInspection")
   protected Vector2 origine;
   protected float health;
   protected float speed;
@@ -27,7 +26,6 @@ public class BaseEnemy {
   protected float rotDif;
   protected Sprite sprite;
   protected boolean isDamaged;
-//  protected Sprite skin;
 
   MyAnimation animation;
 
@@ -67,6 +65,7 @@ public class BaseEnemy {
     sprite = new Sprite(animation.getRegion());
     position = new Vector2();
     position.x = Gdx.graphics.getWidth();
+    //noinspection IntegerDivisionInFloatingPointContext
     position.y = MathUtils.random(Gdx.graphics.getHeight()/3, Gdx.graphics.getHeight()-sprite.getHeight());
     sprite.setPosition(position.x, position.y);
     sprite.setScale(1);
@@ -86,14 +85,11 @@ public class BaseEnemy {
     return position;
   }
 
-  public void setRotate(Vector2 position) {
-    sprite.rotate(getAngle(position) + 90);
-  }
-
   public void setDamage(float damage) {
     this.damage = damage;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   public void setOrigine(Vector2 origine) {
     this.origine = origine;
   }
