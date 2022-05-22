@@ -2,26 +2,32 @@ package ru.lazarev.game.game_objects;
 
 
 import static ru.lazarev.game.screens.StageTwo.mainAtlas;
-import static ru.lazarev.game.utils.GfxUtils.getAngle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import ru.lazarev.game.animation.MyAnimation;
 
 public class BaseEnemy {
 
+  public static final TextureAtlas MAIN_ATLAS = new TextureAtlas("img/atlas/main.atlas");
   protected Vector2 position;
-  protected Vector2 rotate;
+  @SuppressWarnings("SpellCheckingInspection")
   protected Vector2 origine;
   protected float health;
   protected float speed;
   protected float damage;
+  protected float rotDif;
   protected Sprite sprite;
   protected boolean isDamaged;
+
+  MyAnimation animation;
 
   public BaseEnemy(String name, float speed, float health) {
 
@@ -51,6 +57,24 @@ public class BaseEnemy {
 
   }
 
+  public BaseEnemy(String name, float speed, float health, int anmColumns, int anmLines, int anmFps){
+
+    isDamaged = false;
+    animation = new MyAnimation(MAIN_ATLAS.findRegion(name), Animation.PlayMode.NORMAL, anmColumns, anmLines, anmFps);
+    animation.setTime(0);
+    sprite = new Sprite(animation.getRegion());
+    position = new Vector2();
+    position.x = Gdx.graphics.getWidth();
+    //noinspection IntegerDivisionInFloatingPointContext
+    position.y = MathUtils.random(Gdx.graphics.getHeight()/3, Gdx.graphics.getHeight()-sprite.getHeight());
+    sprite.setPosition(position.x, position.y);
+    sprite.setScale(1);
+    this.speed = speed;
+    this.health = health;
+    rotDif = 90;
+  }
+
+
   public float damage(float damage) {
     isDamaged = true;
     health -= damage;
@@ -61,14 +85,11 @@ public class BaseEnemy {
     return position;
   }
 
-  public void setRotate(Vector2 position) {
-    sprite.rotate(getAngle(position) + 90);
-  }
-
   public void setDamage(float damage) {
     this.damage = damage;
   }
 
+  @SuppressWarnings("SpellCheckingInspection")
   public void setOrigine(Vector2 origine) {
     this.origine = origine;
   }
@@ -95,5 +116,13 @@ public class BaseEnemy {
       sprite.setColor(Color.WHITE);
     }
     sprite.draw(batch);
+  }
+
+  public Sprite getSkin() {
+    return sprite;
+  }
+
+  public void setDif(float dif) {
+    this.rotDif = dif;
   }
 }
